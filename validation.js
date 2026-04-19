@@ -5,11 +5,8 @@ const email_input = document.getElementById('email-input');
 const password_input = document.getElementById('password-input');
 const repeat_password_input = document.getElementById('repeat-password-input');
 const error_message = document.getElementById('error-message');
-
-
-// ========================
 // SIGNUP
-// ========================
+
 function signupUser(email, password) {
     const user = { email, password };
 
@@ -20,11 +17,7 @@ function signupUser(email, password) {
 
     window.location.href = "login.html";
 }
-
-
-// ========================
 // LOGIN
-// ========================
 function loginUser(email, password) {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -35,11 +28,7 @@ function loginUser(email, password) {
         alert("Invalid login credentials");
     }
 }
-
-
-// ========================
 // FORM HANDLER
-// ========================
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -72,10 +61,7 @@ form.addEventListener('submit', (e) => {
     }
 });
 
-
-// ========================
 // SIGNUP VALIDATION
-// ========================
 function getSignupFormErrors(firstname, email, password, repeatPassword) {
     let errors = [];
 
@@ -108,10 +94,8 @@ function getSignupFormErrors(firstname, email, password, repeatPassword) {
     return errors;
 }
 
-
-// ========================
 // LOGIN VALIDATION
-// ========================
+
 function getLoginFormErrors(email, password) {
     let errors = [];
 
@@ -128,10 +112,8 @@ function getLoginFormErrors(email, password) {
     return errors;
 }
 
-
-// ========================
 // CLEAR ERRORS
-// ========================
+
 const allInputs = [firstname_input, email_input, password_input, repeat_password_input]
     .filter(Boolean);
 
