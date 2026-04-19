@@ -98,7 +98,7 @@ function toggleIncomeMenu(event) {
 
     const menu = document.getElementById("incomeMenu");
 
-    // close all dropdowns first
+    // close all dropdowns
     document.querySelectorAll(".card-menu-dropdown")
         .forEach(m => m.style.display = "none");
 
@@ -107,7 +107,7 @@ function toggleIncomeMenu(event) {
         menu.style.display === "block" ? "none" : "block";
 }
 
-// close when clicking outside (ONLY ONCE)
+// close when clicking outside (ONCE)
 document.addEventListener("click", () => {
     document.querySelectorAll(".card-menu-dropdown")
         .forEach(m => m.style.display = "none");
@@ -165,9 +165,7 @@ function updateDashboard() {
     document.querySelector('.expense-amount').textContent =
         `$${Number(displayExpenses || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-    // -------------------------
     // MONTHLY COMPARISONS
-    // -------------------------
     const incomeChangeEl = document.querySelectorAll(".change")[0];
     const expenseChangeEl = document.querySelectorAll(".change")[1];
 
@@ -188,10 +186,7 @@ function updateDashboard() {
             ${expenseComparison.percentChange}% vs Last month
         `;
     }
-
-    // -------------------------
     // TOTAL EXPENSE CARD
-    // -------------------------
     const totalExpensesEl = document.querySelector(".total-expenses");
 
     if (totalExpensesEl) {
@@ -199,9 +194,8 @@ function updateDashboard() {
             `$${monthlyExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     }
 
-    // -------------------------
-    // CURRENT MONTH (FIXED LOCATION)
-    // -------------------------
+    // CURRENT MONTH
+    
     const monthLabelEl = document.querySelector('.current-month');
 
     if (monthLabelEl) {
@@ -220,9 +214,7 @@ function updateDashboard() {
         });
     }
 
-    // -------------------------
-    // ADD MONTH TO CARD TITLES (NEW)
-    // -------------------------
+    // ADD MONTH TO CARD TITLES 
     const monthLabels = document.querySelectorAll(".month-label");
 
     let displayDate;
@@ -382,10 +374,8 @@ function getFilteredTransactions() {
             );
         });
     }
-
-    // -------------------------
     // UI FILTERS
-    // -------------------------
+
     if (filters.date) {
         filtered = filtered.filter(t => t.date === filters.date);
     }
@@ -583,7 +573,7 @@ function updateCategoryBreakdown() {
         totals[cat.toLowerCase()] = 0;
     });
 
-    // ✅ FORCE CURRENT MONTH ONLY (NO VIEW FILTERS)
+    // FORCE CURRENT MONTH ONLY 
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
@@ -671,7 +661,7 @@ function updateTransactionsTable() {
     recentTransactions.forEach(transaction => {
         const row = document.createElement('tr');
 
-        // FIXED DATE PARSING (prevents 11th/12th shift bug)
+        // FIXED DATE PARSING 
         const [year, month, day] = transaction.date.split("-");
         const formattedDate = new Date(year, month - 1, day).toLocaleDateString(
             'en-US',
@@ -711,15 +701,13 @@ function updateChart() {
 
     const now = new Date();
 
-    // -------------------------
-    // DAILY → LAST 30 DAYS (FIXED DATE MATCHING)
-    // -------------------------
+    // DAILY → LAST 30 DAYS 
+    
     if (currentView === "daily") {
         for (let i = 29; i >= 0; i--) {
             const d = new Date(now);
             d.setDate(now.getDate() - i);
 
-            // ✅ FIX: use SAME format as your stored dates
             const key = [
                 d.getFullYear(),
                 String(d.getMonth() + 1).padStart(2, "0"),
@@ -743,16 +731,15 @@ function updateChart() {
         }
     }
 
-    // -------------------------
-    // WEEKLY → 52 WEEKS (FIXED YEAR GROUPING)
-    // -------------------------
+   
+    // WEEKLY → 52 WEEKS 
+  
     if (currentView === "weekly") {
         const weeks = Array.from({ length: 52 }, () => ({ income: 0, expense: 0 }));
 
         transactions.forEach(t => {
             const d = toDate(t.date);
 
-            // ✅ FIX: only current year
             if (d.getFullYear() !== now.getFullYear()) return;
 
             const weekIndex = getWeek(d) - 1;
@@ -768,9 +755,8 @@ function updateChart() {
         expenseData = weeks.map(w => w.expense);
     }
 
-    // -------------------------
     // MONTHLY → LAST 12 MONTHS (ALREADY GOOD, slight cleanup)
-    // -------------------------
+   
     if (currentView === "monthly") {
         const months = Array.from({ length: 12 }, () => ({ income: 0, expense: 0 }));
 
@@ -798,14 +784,11 @@ function updateChart() {
         expenseData = months.map(m => m.expense);
     }
 
-    // -------------------------
-    // NET LINE (SMOOTH + SAFE)
-    // -------------------------
+    
+    // NET LINE
+   
     const netData = incomeData.map((val, i) => val - (expenseData[i] || 0));
 
-    // -------------------------
-    // LABEL FIX (NEW)
-    // -------------------------
     const labelEl = document.getElementById("chartModeLabel");
     if (labelEl) {
         if (currentView === "daily") {
@@ -817,9 +800,9 @@ function updateChart() {
         }
     }
 
-    // -------------------------
+   
     // RENDER
-    // -------------------------
+    
     if (financeChart) financeChart.destroy();
 
     financeChart = new Chart(ctx, {
@@ -1141,13 +1124,13 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// When changing view
+
 document.getElementById("viewDropdown").addEventListener("click", () => {
     const options = ["daily", "weekly", "monthly"];
     let index = options.indexOf(currentView);
     currentView = options[(index + 1) % options.length];
 
-    // Set filter for month if needed
+   
     if (currentView === "monthly") {
         const now = new Date();
         filters.month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -1155,7 +1138,7 @@ document.getElementById("viewDropdown").addEventListener("click", () => {
         filters.month = "";
     }
 
-    // Update UI
+   
     document.getElementById("viewLabel").textContent =
         currentView.charAt(0).toUpperCase() + currentView.slice(1);
 
