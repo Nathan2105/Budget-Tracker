@@ -33,6 +33,9 @@ function saveData() {
     localStorage.setItem("expenses", monthlyExpenses);
 }
 
+let manualIncomeOverride = null;
+let manualExpenseOverride = null;
+
 function loadData() {
     const storedTransactions = localStorage.getItem("transactions");
     const storedIncome = localStorage.getItem("income");
@@ -47,14 +50,7 @@ function loadData() {
     monthlyExpenses = storedExpenses ? parseFloat(storedExpenses) : 0;
     spendingLimit = storedLimit ? parseFloat(storedLimit) : 0;
 
-    const savedOverride = localStorage.getItem("manualIncomeOverride");
 
-    manualIncomeOverride =
-        savedOverride !== null ? JSON.parse(savedOverride) : null;
-    const savedExpenseOverride = localStorage.getItem("manualExpenseOverride");
-
-    manualExpenseOverride =
-        savedExpenseOverride !== null ? JSON.parse(savedExpenseOverride) : null;
 }
 
 let monthlyIncome = 0;
@@ -74,8 +70,7 @@ let filters = {
     status: "all",
     search: ""
 };
-let manualIncomeOverride = null;
-let manualExpenseOverride = null;
+
 
 
 function parseLocalDate(dateStr) {
@@ -98,7 +93,6 @@ function toggleIncomeMenu(event) {
 
     const menu = document.getElementById("incomeMenu");
 
-    // close all dropdowns
     document.querySelectorAll(".card-menu-dropdown")
         .forEach(m => m.style.display = "none");
 
@@ -148,15 +142,14 @@ function closeModal(modalId) {
 
 function toDate(dateStr) {
     const [year, month, day] = dateStr.split("-");
-    return new Date(year, month - 1, day); // LOCAL date (no timezone shift)
+    return new Date(year, month - 1, day); 
 }
 
 function updateDashboard() {
-    const displayIncome =
-        manualIncomeOverride !== null ? manualIncomeOverride : monthlyIncome;
+    const displayIncome = monthlyIncome;
 
-   const displayExpenses = monthlyExpenses;
-   console.log("Monthly Expenses:", monthlyExpenses);
+    const displayExpenses = monthlyExpenses;
+    console.log("Monthly Expenses:", monthlyExpenses);
 
     // MAIN CARDS
     document.querySelector('.income-amount').textContent =
@@ -165,7 +158,9 @@ function updateDashboard() {
     document.querySelector('.expense-amount').textContent =
         `$${Number(displayExpenses || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
+   
     // MONTHLY COMPARISONS
+    
     const incomeChangeEl = document.querySelectorAll(".change")[0];
     const expenseChangeEl = document.querySelectorAll(".change")[1];
 
@@ -186,7 +181,10 @@ function updateDashboard() {
             ${expenseComparison.percentChange}% vs Last month
         `;
     }
+
+    
     // TOTAL EXPENSE CARD
+   
     const totalExpensesEl = document.querySelector(".total-expenses");
 
     if (totalExpensesEl) {
@@ -194,7 +192,8 @@ function updateDashboard() {
             `$${monthlyExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     }
 
-    // CURRENT MONTH
+    
+    // CURRENT MONTH 
     
     const monthLabelEl = document.querySelector('.current-month');
 
@@ -214,7 +213,9 @@ function updateDashboard() {
         });
     }
 
+    
     // ADD MONTH TO CARD TITLES 
+    
     const monthLabels = document.querySelectorAll(".month-label");
 
     let displayDate;
@@ -310,6 +311,7 @@ function addIncome() {
 
 function deleteTransaction(id) {
     transactions = transactions.filter(t => t.id !== id);
+
     saveData();
     refreshUI();
 }
@@ -345,7 +347,7 @@ function addExpense() {
     saveData();
     refreshUI();
 
-    updateCategoryBreakdown(); // FIX
+    updateCategoryBreakdown(); 
 
     closeModal("expenseModal");
     showNotification("Expense added successfully", "success");
@@ -374,8 +376,10 @@ function getFilteredTransactions() {
             );
         });
     }
-    // UI FILTERS
 
+   
+    // UI FILTERS
+    
     if (filters.date) {
         filtered = filtered.filter(t => t.date === filters.date);
     }
@@ -444,7 +448,7 @@ function getMonthlyDailySummary() {
     }
 
     // fill data
-   getFilteredTransactions().forEach(t => {
+    getFilteredTransactions().forEach(t => {
         const date = t.date;
 
         const d = toDate(t.date);
@@ -458,8 +462,8 @@ function getMonthlyDailySummary() {
             summary[date].expense += Math.abs(t.amount);
 
             if (currentView === "monthly" && filters.month) {
-    filtered = filtered.filter(t => t.date.startsWith(filters.month));
-}
+                filtered = filtered.filter(t => t.date.startsWith(filters.month));
+            }
         }
     });
 
@@ -501,18 +505,18 @@ function renderMonthlyOverview() {
 }
 
 function calculateTotals() {
-console.log("Calculating totals for filters.month:", filters.month || "current month");
+    console.log("Calculating totals for filters.month:", filters.month || "current month");
 
     let year, month;
 
     if (filters.month) {
         [year, month] = filters.month.split("-");
         year = parseInt(year);
-        month = parseInt(month); // keep 1–12
+        month = parseInt(month); 
     } else {
         const now = new Date();
         year = now.getFullYear();
-        month = now.getMonth() + 1; // convert to 1–12
+        month = now.getMonth() + 1; 
     }
 
     const incomeTotal = transactions
@@ -568,12 +572,11 @@ function updateCategoryBreakdown() {
     const totals = {};
     let totalExpenses = 0;
 
-    // initialize
     categories.forEach(cat => {
         totals[cat.toLowerCase()] = 0;
     });
 
-    // FORCE CURRENT MONTH ONLY 
+
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
@@ -615,14 +618,14 @@ function updateCategoryBreakdown() {
                 <span>${category}</span>
             </div>
             <span>$${amount.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            })}</span>
+            minimumFractionDigits: 2
+        })}</span>
         `;
 
         list.appendChild(li);
     });
 
-    // update total expenses (CURRENT MONTH ONLY)
+    // update total expenses 
     const totalExpensesEl = document.querySelector(".total-expenses");
     if (totalExpensesEl) {
         totalExpensesEl.textContent =
@@ -639,7 +642,6 @@ function updateTransactionsTable() {
 
     let recentTransactions = getFilteredTransactions()
 
-    // no data case
     if (recentTransactions.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -655,7 +657,7 @@ function updateTransactionsTable() {
         return parseLocalDate(b.date) - parseLocalDate(a.date);
     });
 
-    // limit display
+
     recentTransactions = recentTransactions.slice(0, 10);
 
     recentTransactions.forEach(transaction => {
@@ -701,6 +703,7 @@ function updateChart() {
 
     const now = new Date();
 
+  
     // DAILY → LAST 30 DAYS 
     
     if (currentView === "daily") {
@@ -714,7 +717,7 @@ function updateChart() {
                 String(d.getDate()).padStart(2, "0")
             ].join("-");
 
-            labels.push(d.getDate()); // 1–31 clean
+            labels.push(d.getDate()); 
 
             const dayTransactions = transactions.filter(t => t.date === key);
 
@@ -731,9 +734,9 @@ function updateChart() {
         }
     }
 
+    
+    // WEEKLY → 52 WEEKS
    
-    // WEEKLY → 52 WEEKS 
-  
     if (currentView === "weekly") {
         const weeks = Array.from({ length: 52 }, () => ({ income: 0, expense: 0 }));
 
@@ -755,8 +758,9 @@ function updateChart() {
         expenseData = weeks.map(w => w.expense);
     }
 
-    // MONTHLY → LAST 12 MONTHS (ALREADY GOOD, slight cleanup)
-   
+
+    // MONTHLY 
+    
     if (currentView === "monthly") {
         const months = Array.from({ length: 12 }, () => ({ income: 0, expense: 0 }));
 
@@ -784,9 +788,8 @@ function updateChart() {
         expenseData = months.map(m => m.expense);
     }
 
-    
     // NET LINE
-   
+    
     const netData = incomeData.map((val, i) => val - (expenseData[i] || 0));
 
     const labelEl = document.getElementById("chartModeLabel");
@@ -800,9 +803,8 @@ function updateChart() {
         }
     }
 
-   
     // RENDER
-    
+   
     if (financeChart) financeChart.destroy();
 
     financeChart = new Chart(ctx, {
@@ -828,7 +830,7 @@ function updateChart() {
                     label: "Net",
                     data: netData,
                     borderColor: "#3b82f6",
-                    tension: 0.4, // smoother line
+                    tension: 0.4, 
                     fill: false
                 }
             ]
@@ -1019,47 +1021,9 @@ function getIndexByView(date) {
     return -1;
 }
 
-function openIncomeEdit() {
-    document.getElementById("incomeEditModal").style.display = "block";
-    document.body.style.overflow = "hidden";
 
-    document.getElementById("editIncomeValue").value =
-        manualIncomeOverride !== null ? manualIncomeOverride : (monthlyIncome || 0);
-}
-function saveIncomeEdit() {
-    const value = parseFloat(document.getElementById("editIncomeValue").value);
 
-    if (isNaN(value)) {
-        alert("Enter a valid number");
-        return;
-    }
 
-    manualIncomeOverride = value;
-
-    localStorage.setItem("manualIncomeOverride", JSON.stringify(value));
-
-    refreshUI();
-    closeModal("incomeEditModal");
-
-    showNotification("Monthly income updated (manual mode)", "success");
-}
-
-function resetIncomeToAuto() {
-    manualIncomeOverride = null;
-    localStorage.removeItem("manualIncomeOverride");
-
-    refreshUI();
-
-    showNotification("Switched back to automatic income", "success");
-}
-
-function openExpenseEdit() {
-    document.getElementById("expenseEditModal").style.display = "block";
-    document.body.style.overflow = "hidden";
-
-    document.getElementById("editExpenseValue").value =
-        manualExpenseOverride ?? monthlyExpenses ?? 0;
-}
 
 function saveExpenseEdit() {
     const value = parseFloat(document.getElementById("editExpenseValue").value);
@@ -1124,13 +1088,12 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-
 document.getElementById("viewDropdown").addEventListener("click", () => {
     const options = ["daily", "weekly", "monthly"];
     let index = options.indexOf(currentView);
     currentView = options[(index + 1) % options.length];
 
-   
+
     if (currentView === "monthly") {
         const now = new Date();
         filters.month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -1138,7 +1101,6 @@ document.getElementById("viewDropdown").addEventListener("click", () => {
         filters.month = "";
     }
 
-   
     document.getElementById("viewLabel").textContent =
         currentView.charAt(0).toUpperCase() + currentView.slice(1);
 
