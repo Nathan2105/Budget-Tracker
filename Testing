@@ -1,0 +1,145 @@
+# Development & Testing Report
+
+## Overview
+This document outlines the development process, testing approach, and issues encountered during the creation of the Budget Tracker Web Application. The project was built iteratively, with each feature implemented, tested, and refined step-by-step.
+
+---
+
+## 1. Authentication System (Login & Account Creation)
+The first feature implemented was the user authentication system, including account creation and login functionality.
+
+At this stage, the focus was on establishing the initial structure of the application rather than implementing persistent storage. Therefore, localStorage for accounts was not initially included.
+
+### Outcome:
+- Login and signup functionality worked as intended
+- No major issues encountered during implementation
+- Provided the foundation for the rest of the system
+
+---
+
+## 2. Dashboard Structure & UI Layout
+After authentication, the dashboard interface was developed. This included building the core layout and UI components such as:
+
+- Buttons and controls
+- Transaction display sections
+- Summary panels
+- Navigation elements
+
+### Improvements Made:
+- Export button upgraded to export data to Excel format
+- Automatic date display implemented based on current system date
+
+---
+
+## 3. UI Concept Feature (Virtual Card Design)
+A planned feature was a dynamic credit card-style UI element that would display:
+
+- Spending limit usage
+- User-specific card details
+- Dynamic updates based on login data
+
+### Outcome:
+This feature was determined to be too complex within the project timeframe and was not fully implemented. Instead, a simplified static version was used for UI design purposes, with potential for future development.
+
+---
+
+## 4. Core Financial System (Income & Expenses)
+The most important feature of the application was the transaction system.
+
+### Features:
+- Add income and expense entries
+- Categorize transactions
+- Store and retrieve financial data
+
+### Outcome:
+- Implemented successfully with minimal issues
+- Categories designed to reflect realistic user needs
+- System performed reliably during testing
+
+---
+
+## 5. Transaction Display & Filtering System
+The most challenging part of development was displaying and filtering recent transactions.
+
+### Initial Issues:
+- Transactions displayed correctly but lacked proper filtering logic
+- Inconsistent grouping by category and time period
+
+### Fixes:
+- Implemented improved filtering logic
+- Ensured correct mapping between stored data and UI display
+- Stabilized transaction rendering system
+
+---
+
+## 6. Chart System (Data Visualization)
+A chart system was implemented using Chart.js to visualize:
+
+- Income (green)
+- Expenses (red)
+- Net balance (line graph)
+
+### Key Challenges:
+- Synchronizing chart updates with live data
+- Implementing correct filtering for:
+  - Daily view
+  - Weekly view
+  - Monthly view
+
+### Major Fix:
+The getIndexByView function was corrected, which resolved:
+- Incorrect data grouping
+- Chart update inconsistencies
+- Filtering errors across time views
+
+---
+
+## 7. System-Wide Debugging & Optimization
+A significant portion of development focused on ensuring synchronization between:
+
+- localStorage data
+- UI updates
+- chart rendering
+- filtering system
+
+### Issues Resolved:
+- UI not updating after changes
+- Charts not refreshing correctly
+- Filtering inconsistencies
+
+After debugging and refactoring, system stability was achieved.
+
+---
+
+## 8. Monthly Analytics & Calculations
+The monthly analytics system initially used hardcoded values for calculations such as percentage change.
+
+### Improvements:
+- Removed all hardcoded values
+- Implemented dynamic calculations based on:
+  - Current month data
+  - Previous month comparisons
+  - Live transaction updates
+
+This improved accuracy and made the system fully data-driven.
+
+---
+
+## Final Testing Outcome
+The application was tested end-to-end, including:
+
+- User registration and login
+- Adding and deleting transactions
+- Filtering by time period
+- Chart updates and visualization
+- Data persistence across sessions
+
+### Result:
+All core features functioned correctly after iterative debugging and refinement.
+
+---
+
+## Conclusion
+This project followed an iterative software development approach, where features were built incrementally and continuously tested. The most complex challenges involved data synchronization between localStorage, UI rendering, and chart visualization.
+
+Through debugging and refinement, the application was successfully stabilized into a fully functional budget tracking system.
