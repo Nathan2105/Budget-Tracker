@@ -40,6 +40,14 @@ User Input → Transaction Object → transactions array → localStorage → UI
 
 ---
 
+| Requirement           | Implemented Feature       |
+| --------------------- | ------------------------- |
+| Track income/expenses | Transaction system        |
+| Filter data           | Advanced filtering system |
+| Visual analysis       | Chart.js dashboard        |
+| Authentication        | localStorage login system |
+
+
 ## Data Model
 Each transaction is stored as an object in the following format:
 
