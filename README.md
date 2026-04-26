@@ -153,13 +153,11 @@ Microsoft Teams (communication)
 
 **Roles and Responsibilities**
 
-Due to limited group participation, all roles were primarily completed by a single contributor:
-
 Coder: Implemented all application features and logic
 Tester: Performed manual testing and validation
 Release Manager: Managed versioning and final release
 Account Manager: Defined requirements and feature planning
-Documentation: Created documenation for project, early stages was assissted
+Documentation: Created documenation for project
 
 **How the Application Works**
 User logs in or signs up
